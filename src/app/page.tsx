@@ -1,7 +1,7 @@
 
 import { promises as fs } from "fs"
 import path from "path"
-// import { Metadata } from "next"
+import { Metadata } from "next"
 import Image from "next/image"
 import { z } from "zod"
 import { useTheme } from "next-themes"
