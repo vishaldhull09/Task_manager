@@ -70,7 +70,7 @@ export function TableForm( {setOpen}) {
   async function onSubmit(data: z.infer<typeof formSchema>) {
     console.log("formdata", data)
     try {
-      const url = 'http://localhost:3000/api/tasks'
+      const url = 'https://task-manager0910.fly.dev/api/tasks'
       let res = await fetch(url, {
           method: 'POST',
           body: JSON.stringify(data)
