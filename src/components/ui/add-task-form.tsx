@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 import Router from "next/router";
 import { Button } from "@/components/ui/button"
@@ -27,14 +27,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useState } from "react";
 
 const formSchema = z.object({
   id: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+    message: "id must be at least 2 characters.",
   }),
-  title: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  title: z
+  .string({ required_error: 'Title is required' })
+  .min(2, 'Title must be at least 2 characters long'),
   status: z
     .string({
       required_error: "Please select status.",
@@ -53,45 +54,51 @@ const formSchema = z.object({
 })
 
 export function TableForm( {setOpen}) {
+
+  const [error, setError] = useState('');
+
   
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      id: "",
-      title: "",
-      status: "in progress",
-      priority: "Low",
-      label: "Bug"
-    },
+    resolver: zodResolver(formSchema)
   })
+  console.log(form.formState.errors)
 
   const router = useRouter();
  
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log("formdata", data)
     try {
       const url = 'https://task-manager0910.fly.dev/api/tasks'
       let res = await fetch(url, {
           method: 'POST',
-          body: JSON.stringify(data)
-      }).then(response => {
-        response.text()
-      }).then(data => console.log(data)
-      )
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+      })
+      let result = await res.json();
+      
+      if(result.msg && result.msg.code == 11000){
+        console.log(result.msg)
+        throw new Error("you already have this task id")
+      }
+      //else{
+      router.refresh()
+      // console.log("done")
+      setOpen(false)
+      setError("")
+      //}
     }
-    catch(e){
-      alert(e)
+    catch(error){
+      setError(error.message)
     }
-    setOpen(false)
    
-
-    router.refresh();
 
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      { error.length >0 ? (<span style={{color: "red", fontSize: 14}}>{error}</span> ) : null }
         <FormField
           control={form.control}
           name="id"
@@ -130,11 +137,11 @@ export function TableForm( {setOpen}) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="in progress">in progress</SelectItem>
+                  <SelectItem value="In progress">In progress</SelectItem>
                   <SelectItem value="Backlog">Backlog</SelectItem>
                   <SelectItem value="Todo">Todo</SelectItem>
                   <SelectItem value="Done">Done</SelectItem>
-                  <SelectItem value="Cancelled">Cancelled</SelectItem>
+                  <SelectItem value="Canceled">Canceled</SelectItem>
                 </SelectContent>
               </Select>
                       </FormItem>
@@ -145,11 +152,11 @@ export function TableForm( {setOpen}) {
           name="priority"
           render={({ field }) => (
             <FormItem>
-             <FormLabel>Status</FormLabel>
+             <FormLabel>Priority</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue id="select_form" placeholder="Select status" />
+                    <SelectValue id="select_form" placeholder="Select priority" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>

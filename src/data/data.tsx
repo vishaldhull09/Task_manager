@@ -15,7 +15,7 @@ export const labels = [
     label: "Bug",
   },
   {
-    value: "feature",
+    value: "Feature",
     label: "Feature",
   },
   {
@@ -26,27 +26,27 @@ export const labels = [
 
 export const statuses = [
   {
-    value: "backlog",
+    value: "Backlog",
     label: "Backlog",
     icon: QuestionMarkCircledIcon,
   },
   {
-    value: "todo",
+    value: "Todo",
     label: "Todo",
     icon: CircleIcon,
   },
   {
-    value: "in progress",
+    value: "In progress",
     label: "In Progress",
     icon: StopwatchIcon,
   },
   {
-    value: "done",
+    value: "Done",
     label: "Done",
     icon: CheckCircledIcon,
   },
   {
-    value: "canceled",
+    value: "Canceled",
     label: "Canceled",
     icon: CrossCircledIcon,
   },

@@ -1,8 +1,10 @@
+
 import { promises as fs } from "fs"
 import path from "path"
-import { Metadata } from "next"
+// import { Metadata } from "next"
 import Image from "next/image"
 import { z } from "zod"
+import { useTheme } from "next-themes"
 
 import { columns } from "@/components/ui/columns"
 import { DataTable } from "@/components/ui/data-table"
@@ -14,23 +16,17 @@ export const metadata: Metadata = {
   description: "A task and issue tracker build using Tanstack Table.",
 }
 
-// Simulate a database read for tasks.
-// async function getTasks() {
-//   const data = await fs.readFile(
-//     path.join(process.cwd(), "src/data/tasks.json")
-//   )
 
-//   const tasks = JSON.parse(data.toString())
-
-//   return z.array(taskSchema).parse(tasks)
-// }
 
 async function getTasks(){
   try {
     const url = 'https://task-manager0910.fly.dev/api/tasks'
     let res = await fetch(url, {
         method: 'GET',
-        cache: "no-store"
+        cache: "no-store",
+        headers: {
+          'Content-Type': 'application/json'
+        }
     })
 
    
@@ -38,9 +34,10 @@ async function getTasks(){
       throw new Error("Failed to fetch topics");
     }
     const data = await res.json()
+    console.log("getting data", data)
 
 
-    return data.tasks;
+    return z.array(taskSchema).parse(data.tasks);
   } catch (error) {
     console.log("Error loading topics: ", error);
   }
