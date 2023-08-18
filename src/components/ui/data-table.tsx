@@ -23,7 +23,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/registry/new-york/ui/table"
+} from "@/components/ui/table"
 
 import { DataTablePagination } from "@/components/ui/data-table-pagination"
 import { DataTableToolbar } from "@/components/ui/data-table-toolbar"

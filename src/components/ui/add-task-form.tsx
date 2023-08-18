@@ -146,7 +146,7 @@ export function TableForm( {setOpen}) {
           render={({ field }) => (
             <FormItem>
              <FormLabel>Status</FormLabel>
-              <Select id="select_form" onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue id="select_form" placeholder="Select status" />
@@ -168,7 +168,7 @@ export function TableForm( {setOpen}) {
           render={({ field }) => (
             <FormItem>
              <FormLabel>Label</FormLabel>
-              <Select id="select_form" onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue id="select_form" placeholder="Select Label" />
