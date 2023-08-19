@@ -52,7 +52,7 @@ export function EditTaskForm({setOpen, task}) {
  
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
-        const url = `http://localhost:3000/api/tasks/${task.id}`
+        const url = `https://task-manager0910.fly.dev/api/tasks/${task.id}`
        
         const res = await axios.patch(url, data)   
         if(res.statusText!="OK"){

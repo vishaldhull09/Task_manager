@@ -57,7 +57,7 @@ export function DataTableRowActions<TData>({
   async function handleDelete(){
     try {
       console.log("delete")
-      const url = `http://localhost:3000/api/tasks/${task.id}`
+      const url = `https://task-manager0910.fly.dev/api/tasks/${task.id}`
       console.log(task)
       const res = await axios.delete(url)   
       console.log(res)
@@ -93,7 +93,7 @@ export function DataTableRowActions<TData>({
 
   async function handleMakeCopy(){
     try {
-      const url = 'http://localhost:3000/api/tasks'
+      const url = 'https://task-manager0910.fly.dev/api/tasks'
 
       task.id = getNextCopy(task.id)
       let res = await fetch(url, {

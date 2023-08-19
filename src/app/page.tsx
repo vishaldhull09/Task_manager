@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 async function getTasks(){
   try {
-    const url = 'http://localhost:3000/api/tasks'
+    const url = 'https://task-manager0910.fly.dev/api/tasks'
     let res = await fetch(url, {
         method: 'GET',
         cache: "no-store",
