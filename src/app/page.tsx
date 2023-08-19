@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 
 async function getTasks(){
   try {
-    const url = `${domain}api/tasks`
+    const url = `${domain}/api/tasks`
     let res = await fetch(url, {
         method: 'GET',
         cache: "no-store",
