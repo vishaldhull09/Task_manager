@@ -30,33 +30,19 @@ import {
 import { useState } from "react";
 
 const formSchema = z.object({
-  id: z.string().min(2, {
-    message: "id must be at least 2 characters.",
-  }),
   title: z
-  .string({ required_error: 'Title is required' })
-  .min(2, 'Title must be at least 2 characters long'),
-  status: z
-    .string({
-      required_error: "Please select status.",
-    }),
-  priority: z
-    .string({
-      required_error: "Please select priority",
-    }),
-  label: z
-  .string({
-    required_error: "Please select priority",
-  }),
-
-
-
+  .string()
+  .min(2, 'Title must be at least 2 characters long').optional(),
+  status: z.string().optional(),
+  priority: z.string().optional(),
+  label: z.string().optional()
 })
 
-export function TableForm( {setOpen}) {
+export function EditTaskForm({setOpen, task}) {
+    console.log(setOpen)
 
   const [error, setError] = useState('');
-
+  const axios = require('axios')
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema)
@@ -66,50 +52,25 @@ export function TableForm( {setOpen}) {
  
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
-      const url = 'http://localhost:3000/api/tasks'
-      let res = await fetch(url, {
-          method: 'POST',
-          body: JSON.stringify(data),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-      })
-      let result = await res.json();
-      
-      if(result.msg && result.msg.code == 11000){
-        console.log(result.msg)
-        throw new Error("you already have this task id")
+        const url = `http://localhost:3000/api/tasks/${task.id}`
+       
+        const res = await axios.patch(url, data)   
+        if(res.statusText!="OK"){
+          console.log("update error", res)
+          throw(res.msg)
+        } 
       }
-      //else{
+      catch(error){
+        alert(error)
+      }
+      setOpen(false);
       router.refresh()
-      // console.log("done")
-      setOpen(false)
-      setError("")
-      //}
-    }
-    catch(error){
-      setError(error.message)
-    }
-   
-
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
       { error.length >0 ? (<span style={{color: "red", fontSize: 14}}>{error}</span> ) : null }
-        <FormField
-          control={form.control}
-          name="id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Task ID</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              </FormItem>
-          )}
-          />
           <FormField
           control={form.control}
           name="title"
@@ -117,7 +78,7 @@ export function TableForm( {setOpen}) {
             <FormItem>
                <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input  defaultValue={task.value} placeholder={task.title} {...field} />
               </FormControl>
               </FormItem>
           )}
@@ -132,7 +93,7 @@ export function TableForm( {setOpen}) {
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue id="select_form" placeholder="Select status" />
+                    <SelectValue id="select_form" placeholder={task.status}  defaultValue={task.status} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -155,7 +116,7 @@ export function TableForm( {setOpen}) {
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue id="select_form" placeholder="Select priority" />
+                    <SelectValue id="select_form" defaultValue={task.priority} placeholder={task.priority} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -177,7 +138,7 @@ export function TableForm( {setOpen}) {
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue id="select_form" placeholder="Select Label" />
+                    <SelectValue id="select_form" defaultValue={task.label} placeholder={task.label} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>

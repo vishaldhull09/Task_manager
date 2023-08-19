@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 
-import { labels, priorities, statuses } from "../../data/data"
+import { labels, priorities, statuses, favorites } from "../../data/data"
 import { Task } from "../../data/schema"
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
@@ -37,7 +37,24 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Task" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
+    cell: ({ row }) => {
+      console.log("vishal122",row.original.favorite)
+      const favorite = favorites.find(
+        (favorite) => favorite.value === row.original.favorite
+      )
+      if(!favorite){
+        return null
+      }
+      return(
+        <div className="flex items-center">
+        {favorite.icon && (
+          <favorite.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+        )}
+        <span>{row.getValue("id")}</span>
+      </div>
+    )
+
+   },
     enableSorting: false,
     enableHiding: false,
   },

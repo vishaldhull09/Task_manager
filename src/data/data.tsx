@@ -7,6 +7,7 @@ import {
   CrossCircledIcon,
   QuestionMarkCircledIcon,
   StopwatchIcon,
+  HeartFilledIcon
 } from "@radix-ui/react-icons"
 
 export const labels = [
@@ -68,4 +69,15 @@ export const priorities = [
     value: "High",
     icon: ArrowUpIcon,
   },
+]
+
+export const favorites = [
+  {
+    value: true,
+    icon: HeartFilledIcon
+  },
+  {
+    value: false,
+    icon: null
+  }
 ]
