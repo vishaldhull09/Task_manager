@@ -26,6 +26,7 @@ import { useEffect, useState } from "react"
 import { redirect, useRouter } from "next/navigation";
 import { EditTaskForm } from "./edit-task-form"
 import { EditTask } from "./edit-task"
+import {domain} from "@/lib/utils"
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -56,13 +57,9 @@ export function DataTableRowActions<TData>({
 
   async function handleDelete(){
     try {
-      console.log("delete")
-      const url = `https://task-manager0910.fly.dev/api/tasks/${task.id}`
-      console.log(task)
+      const url = `${domain}/api/tasks/${task.id}`
       const res = await axios.delete(url)   
-      console.log(res)
-      if(res.statusText!="OK"){
-        console.log("delete error", res.ok, res.statusText)
+      if(res.status!=200){
         throw(res.msg)
       } 
     }
@@ -74,11 +71,9 @@ export function DataTableRowActions<TData>({
 
   async function updateTask(data){
     try {
-      const url = `http://localhost:3000/api/tasks/${task.id}`
-      console.log(task)
+      const url = `${domain}/api/tasks/${task.id}`
       const res = await axios.patch(url, data)   
-      if(res.statusText!="OK"){
-        console.log("update error", res)
+      if(res.status!=200){
         throw(res.msg)
       } 
     }
@@ -93,7 +88,7 @@ export function DataTableRowActions<TData>({
 
   async function handleMakeCopy(){
     try {
-      const url = 'https://task-manager0910.fly.dev/api/tasks'
+      const url = `${domain}/api/tasks`
 
       task.id = getNextCopy(task.id)
       let res = await fetch(url, {
@@ -106,12 +101,10 @@ export function DataTableRowActions<TData>({
       let result = await res.json();
       
       if(result.msg && result.msg.code == 11000){
-        console.log(result.msg)
         throw new Error("you already have this task id")
       }
       //else{
       router.refresh()
-      // console.log("done")
       setOpen(false)
     
       //}

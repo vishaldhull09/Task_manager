@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useForm } from "react-hook-form"
+import {domain} from "@/lib/utils"
 
 
 
@@ -30,6 +31,7 @@ import {
 import { useState } from "react";
 
 const formSchema = z.object({
+  id: z.string().optional(),
   title: z
   .string()
   .min(2, 'Title must be at least 2 characters long').optional(),
@@ -39,9 +41,7 @@ const formSchema = z.object({
 })
 
 export function EditTaskForm({setOpen, task}) {
-    console.log(setOpen)
 
-  const [error, setError] = useState('');
   const axios = require('axios')
   
   const form = useForm<z.infer<typeof formSchema>>({
@@ -52,16 +52,15 @@ export function EditTaskForm({setOpen, task}) {
  
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
-        const url = `https://task-manager0910.fly.dev/api/tasks/${task.id}`
+        const url = `${domain}/api/tasks/${task.id}`
        
-        const res = await axios.patch(url, data)   
-        if(res.statusText!="OK"){
-          console.log("update error", res)
+        const res = await axios.patch(url, data)  
+        if(res.status!=200){
           throw(res.msg)
         } 
       }
       catch(error){
-        alert(error)
+        console.log(error)
       }
       setOpen(false);
       router.refresh()
@@ -70,7 +69,6 @@ export function EditTaskForm({setOpen, task}) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-      { error.length >0 ? (<span style={{color: "red", fontSize: 14}}>{error}</span> ) : null }
           <FormField
           control={form.control}
           name="title"

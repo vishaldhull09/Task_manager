@@ -18,7 +18,6 @@ import { useState } from "react"
 
 export function EditTask({open, setOpen, setOpenmenu, task}) {
     //let [open,setOpen] = useState(setOpen);
-    console.log("editng")
    
   return (
     <Dialog open={open} onOpenChange={setOpen}>

@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input"
 import { useForm } from "react-hook-form"
 
 
+import {domain} from "@/lib/utils"
 
 import {
   Select,
@@ -66,7 +67,7 @@ export function TableForm( {setOpen}) {
  
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
-      const url = 'http://localhost:3000/api/tasks'
+      const url = `${domain}/api/tasks`
       let res = await fetch(url, {
           method: 'POST',
           body: JSON.stringify(data),
@@ -77,7 +78,6 @@ export function TableForm( {setOpen}) {
       let result = await res.json();
       
       if(result.msg && result.msg.code == 11000){
-        console.log(result.msg)
         throw new Error("you already have this task id")
       }
       //else{

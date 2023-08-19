@@ -11,6 +11,8 @@ import { DataTable } from "@/components/ui/data-table"
 import { UserNav } from "@/components/ui/user-nav"
 import { taskSchema } from "../data/schema"
 
+import {domain} from "@/lib/utils"
+
 export const metadata: Metadata = {
   title: "Tasks",
   description: "A task and issue tracker build using Tanstack Table.",
@@ -20,7 +22,7 @@ export const metadata: Metadata = {
 
 async function getTasks(){
   try {
-    const url = 'https://task-manager0910.fly.dev/api/tasks'
+    const url = `${domain}api/tasks`
     let res = await fetch(url, {
         method: 'GET',
         cache: "no-store",
@@ -34,7 +36,6 @@ async function getTasks(){
       throw new Error("Failed to fetch topics");
     }
     const data = await res.json()
-    console.log("getting data", data)
 
 
     return z.array(taskSchema).parse(data.tasks);

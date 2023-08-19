@@ -38,7 +38,6 @@ export const columns: ColumnDef<Task>[] = [
       <DataTableColumnHeader column={column} title="Task" />
     ),
     cell: ({ row }) => {
-      console.log("vishal122",row.original.favorite)
       const favorite = favorites.find(
         (favorite) => favorite.value === row.original.favorite
       )
